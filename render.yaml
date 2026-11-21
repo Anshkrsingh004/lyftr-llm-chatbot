@@ -1,0 +1,32 @@
+# Render Blueprint for the backend (Docker web service).
+# Deploy: Render dashboard -> New + -> Blueprint -> pick this repo.
+# Secrets (LLM_API_KEYS) and ALLOWED_ORIGINS are set in the dashboard, not here.
+services:
+  - type: web
+    name: lyftr-chatbot-backend
+    runtime: docker
+    dockerfilePath: backend/Dockerfile
+    dockerContext: backend
+    plan: free
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      # SQLite path. NOTE: Render's free plan has no persistent disk, so this
+      # resets on redeploy/spin-down. For durable history, upgrade the instance
+      # and attach a disk mounted at /data (see README). `make up` locally uses a
+      # named volume and fully satisfies the "survives restarts" requirement.
+      - key: DATABASE_URL
+        value: sqlite:////data/app.db
+      - key: LITELLM_MODEL
+        value: groq/openai/gpt-oss-20b
+      - key: ENABLE_FAILURE_SIMULATION
+        value: "true"
+      - key: CACHE_TYPE
+        value: local
+      - key: DEFAULT_SYSTEM_PROMPT
+        value: You are a helpful assistant.
+      # Set these in the dashboard:
+      - key: LLM_API_KEYS        # your 2 Groq keys, comma-separated (secret)
+        sync: false
+      - key: ALLOWED_ORIGINS     # your Vercel frontend URL, after it's deployed
+        sync: false

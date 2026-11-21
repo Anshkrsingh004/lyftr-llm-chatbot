@@ -14,9 +14,12 @@ token tracking, and multi-turn history stored in SQLite.
 
 > Fill these in after deploying (see **Deployment** below).
 
-- **Frontend:** `https://<your-frontend>.vercel.app`
-- **Backend:** `https://<your-backend>.onrender.com`
-- **Health check:** `https://<your-backend>.onrender.com/health`
+- **Frontend:** https://lyftr-llm-chatbot-kappa.vercel.app
+- **Backend:** https://lyftr-chatbot-backend-249h.onrender.com
+- **Health check:** https://lyftr-chatbot-backend-249h.onrender.com/health
+
+> The backend runs on Render's free tier, which cold-starts after ~15 min idle —
+> the first request may take ~30–60s to wake, then it's fast.
 
 The deployed frontend is configured (via `VITE_API_BASE_URL`) to call the
 deployed backend, and the backend allows the frontend origin via
